@@ -18,15 +18,13 @@ Guidance on onboarding samples to docs.microsoft.com/samples: https://review.doc
 Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
 -->
 
-Give a short description for your sample here. What does it do and why is it important?
+The sample here provides the source code that is created in the Your First IoT Central App Learn module. This module creates an app in Azure IoT Central to monitor and command a fleet of refrigerated trucks. The module is intended as a complete introduction to IoT Central, showing how to create an app in IoT Central, create a Node.js app to simulate remote devices, how to send commands to the remote devices, and view the status of those devices on a dashboard.
 
 ## Contents
 
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
-
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
+| `app.js`          | Node.hs source code.                       |
 | `.gitignore`      | Define what to ignore at commit time.      |
 | `CHANGELOG.md`    | List of changes to the sample.             |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
@@ -35,19 +33,18 @@ Outline the file contents of the repository. It helps users navigate the codebas
 
 ## Prerequisites
 
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
+The student of the module will need familiarity with the Azure IoT Central portal. The code development can be done using Visual Studio, or Visual Studio Code. 
 
 ## Setup
-
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
+The setup is explained in the text for the module. The module does not require the student to download the code from this location, the code is listed and explained in the Learn module. The code here is a resource if the student needs it.
 
 ## Runnning the sample
 
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
+Running the sample requires that the student go through all the steps of the Learn module.
 
 ## Key concepts
 
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+The sample simulates the movements of regrigerated trucks around Seattle. The operator of the IoT Central app built in the Learn module can issue commands to a number of trucks to deliver their contents to a number of customers. The operator can then view the movement of the trucks to their respective customers. Routes are provided by calling API functions of Azure Maps.
 
 ## Contributing
 
