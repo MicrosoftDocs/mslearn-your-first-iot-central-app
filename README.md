@@ -1,14 +1,15 @@
 ---
 page_type: sample
 languages:
-- csharp
+- javascript
 products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
+- azure-iot-central
+- azure-maps
+description: "This sample is the source code created in the Your First IoT Central App Learn module (controlling a fleet of refrigerated trucks)."
+urlFragment: "your-first-iot-central-app"
 ---
 
-# Official Microsoft Sample
+#  Your First IoT Central App Learn module
 
 <!-- 
 Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
@@ -24,7 +25,7 @@ The sample here provides the source code that is created in the Your First IoT C
 
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
-| `app.js`          | Node.hs source code.                       |
+| `app.js`          | Node.js source code.                       |
 | `.gitignore`      | Define what to ignore at commit time.      |
 | `CHANGELOG.md`    | List of changes to the sample.             |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
