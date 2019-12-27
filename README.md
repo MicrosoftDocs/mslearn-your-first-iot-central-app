@@ -19,13 +19,14 @@ Guidance on onboarding samples to docs.microsoft.com/samples: https://review.doc
 Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
 -->
 
-The sample here provides the source code that is created in the Your First IoT Central App Learn module. This module creates an app in Azure IoT Central to monitor and command a fleet of refrigerated trucks. The module is intended as a complete introduction to IoT Central, showing how to create an app in IoT Central, create a Node.js app to simulate remote devices, how to send commands to the remote devices, and view the status of those devices on a dashboard.
+The sample here provides the source code that is created in the Your First IoT Central App Learn module. This module creates an app in Azure IoT Central to monitor and command a fleet of refrigerated trucks. The module is intended as a complete introduction to IoT Central, showing how to create an app in IoT Central, create a Node.js, or C#, app to simulate remote devices, how to send commands to the remote devices, and view the status of those devices on a dashboard.
 
 ## Contents
 
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
 | `app.js`          | Node.js source code.                       |
+| `Program.cs`      | C# source code.                       |
 | `.gitignore`      | Define what to ignore at commit time.      |
 | `CHANGELOG.md`    | List of changes to the sample.             |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
