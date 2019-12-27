@@ -1,31 +1,17 @@
 "use strict";
 
+const chalk = require('chalk');
 const truckNum = 1;
 
 var truckIdentification = "Truck number " + truckNum;
+var connectionString = "<your IoT Central device connection string>";
 
-var connectionString;
+function greenMessage(text) {
+    console.log(chalk.green(text));
+}
 
-switch (truckNum) {
-    case 1:
-        connectionString = "<your first truck connection string>";
-        break;
-
-    case 2:
-        connectionString = "<your second truck connection string>";
-        break;
-
-    case 3:
-        connectionString = "<your third truck connection string>";
-        break;
-
-    case 4:
-        connectionString = "<your fourth truck connection string>";
-        break;
-
-    case 5:
-        connectionString = "<your fifth truck connection string>";
-        break;
+function redMessage(text) {
+    console.log(chalk.red(text));
 }
 
 console.log("Starting " + truckIdentification);
@@ -36,7 +22,7 @@ var Message = require('azure-iot-device').Message;
 var rest = require("azure-maps-rest")
 
 // Connect to Azure Maps.
-var subscriptionKeyCredential = new rest.SubscriptionKeyCredential("<your Azure Maps Account Subscription Key>");
+var subscriptionKeyCredential = new rest.SubscriptionKeyCredential("<your Azure Maps Subscription Key");
 
 var pipeline = rest.MapsURL.newPipeline(subscriptionKeyCredential);
 
@@ -75,8 +61,7 @@ var state = stateEnum.ready;        // Truck is full and ready to go!
 var optimalTemperature = -5;        // Setting - can be changed by the operator from IoT Central.
 
 const noEvent = "none";
-var conflict = noEvent;             // Event: set to a warning if a conflicting command received.
-var newCustomerId = noEvent;        // Event: set when a new customer Id is received.
+var eventText = noEvent;            // Text to send to the IoT operator.
 
 var customer = [                    // Lat/lon position of customers.
     // Gasworks Park
@@ -175,7 +160,7 @@ function GetRoute(newState) {
 
     results.then(data => {
 
-        console.log("Number of points = " + JSON.stringify(data.routes[0].legs[0].points.length, null, 4));
+        greenMessage("Route found. Number of points = " + JSON.stringify(data.routes[0].legs[0].points.length, null, 4));
 
         // Clear the path.
         path.length = 0;
@@ -193,8 +178,6 @@ function GetRoute(newState) {
 
         // Finish with the destination.
         path.push([destinationLat, destinationLon]);
-
-        console.log(JSON.stringify(path, null, 4));
 
         // Store the path length and time taken, to calculate the average speed.
         var meters = data.routes[0].summary.lengthInMeters;
@@ -226,15 +209,15 @@ function GetRoute(newState) {
     }, reason => {
 
         // Error: The request was aborted.
-        console.log(reason);
-        conflict = "Failed to find map route";
+        redMessage(reason);
+        eventText = "Failed to find map route";
     });
 }
 
 function CmdGoToCustomer(request, response) {
 
-    // Pick up variables from the request payload, with the field name specified in IoT Central.
-    var num = request.payload.customerId;
+    // Pick up variable from the request payload.
+    var num = request.payload;
 
     // Check for a valid customer ID.
     if (num >= 0 && num < customer.length) {
@@ -243,19 +226,19 @@ function CmdGoToCustomer(request, response) {
             case stateEnum.dumping:
             case stateEnum.loading:
             case stateEnum.delivering:
-                conflict = "Unable to act - " + state;
+                eventText = "Unable to act - " + state;
                 break;
 
             case stateEnum.ready:
             case stateEnum.enroute:
             case stateEnum.returning:
                 if (contents === contentsEnum.empty) {
-                    conflict = "Unable to act - empty";
+                    eventText = "Unable to act - empty";
                 }
                 else {
 
-                    // Set event only when all is good.
-                    newCustomerId = num;
+                    // Set new customer event only when all is good.
+                    eventText = "New customer: " + num.toString();
 
                     destinationLat = customer[num][0];
                     destinationLon = customer[num][1];
@@ -267,14 +250,14 @@ function CmdGoToCustomer(request, response) {
         }
     }
     else {
-        conflict = "Invalid customer: " + num;
+        eventText = "Invalid customer: " + num;
     }
 
     // Acknowledge the command.
     response.send(200, 'Success', function (errorMessage) {
         // Failure
         if (errorMessage) {
-            console.error('Failed sending a CmdGoToCustomer response:\n' + errorMessage.message);
+            redMessage('Failed sending a CmdGoToCustomer response:\n' + errorMessage.message);
         }
     });
 }
@@ -293,15 +276,15 @@ function CmdRecall(request, response) {
         case stateEnum.ready:
         case stateEnum.loading:
         case stateEnum.dumping:
-            conflict = "Already at base";
+            eventText = "Already at base";
             break;
 
         case stateEnum.returning:
-            conflict = "Already returning";
+            eventText = "Already returning";
             break;
 
         case stateEnum.delivering:
-            conflict = "Unable to recall - " + state;
+            eventText = "Unable to recall - " + state;
             break;
 
         case stateEnum.enroute:
@@ -313,7 +296,7 @@ function CmdRecall(request, response) {
     response.send(200, 'Success', function (errorMessage) {
         // Failure
         if (errorMessage) {
-            console.error('Failed sending a CmdRecall response:\n' + errorMessage.message);
+            redMessage('Failed sending a CmdRecall response:\n' + errorMessage.message);
         }
     });
 }
@@ -470,47 +453,39 @@ function sendTruckTelemetry() {
         {
             // Format is:  
             // Field name from IoT Central app ":" variable name from NodeJS app.
-            temperature: temp,
-            stateTruck: state,
-            stateCoolingSystem: fan,
-            stateContents: contents,
-            location: {
+            ContentsTemperature: temp.toFixed(2),
+            TruckState: state,
+            CoolingSystemState: fan,
+            ContentsState: contents,
+            Location: {
                 // Names must be lon, lat.
                 lon: currentLon,
                 lat: currentLat
             },
         });
 
-    // Add the conflict event string, if there is one.
-    if (conflict != noEvent) {
+    // Add the eventText event string, if there is one.
+    if (eventText != noEvent) {
         data += JSON.stringify(
             {
-                eventConflict: conflict,
+                Event: eventText,
             }
         );
-        conflict = noEvent;
-    }
-
-    // Add the new customer event string, if there is one.
-    if (newCustomerId != noEvent) {
-        data += JSON.stringify(
-            {
-                eventCustomer: newCustomerId,
-            }
-        );
-        newCustomerId = noEvent;
+        eventText = noEvent;
     }
 
     // Create the message with the above defined data.
     var message = new Message(data);
 
-    console.log("Message: temp = " + temp);
+    console.log("Message: " + data);
 
     // Send the message.
     client.sendEvent(message, function (errorMessage) {
         // Error
         if (errorMessage) {
-            console.log('Failed to send message to Azure IoT Central: ${err.toString()}');
+            redMessage("Failed to send message to Azure IoT Central: ${err.toString()}");
+        } else {
+            greenMessage("Telemetry sent\n");
         }
     });
 }
@@ -524,7 +499,7 @@ function sendDeviceProperties(deviceTwin) {
     {
         // Format is:
         // <Property field name in Azure IoT Central> ":" <value in NodeJS app>
-        truckid: truckIdentification,
+        TruckID: truckIdentification,
     };
 
     console.log(' * Property - truckId: ' + truckIdentification);
@@ -540,7 +515,7 @@ var settings =
     // '<field name from Azure IoT Central>' ":" (newvalue, callback) ....
     //  <variable name in NodeJS app> = newValue;
     //  callback(<variable name in NodeJS app>,'completed');
-    'optimalTemperature': (newValue, callback) => {
+    'OptimalTemperature': (newValue, callback) => {
         setTimeout(() => {
             optimalTemperature = newValue;
             callback(optimalTemperature, 'completed');
@@ -594,25 +569,25 @@ var connectCallback = (errorMessage) => {
     else {
 
         // Notify the user
-        console.log('Device successfully connected to Azure IoT Central');
+        greenMessage('Device successfully connected to Azure IoT Central');
 
         // Send telemetry measurements to Azure IoT Central every 5 seconds.
         setInterval(sendTruckTelemetry, 5000);
 
         // Set up device command callbacks.
-        client.onDeviceMethod('cmdGoTo', CmdGoToCustomer);
-        client.onDeviceMethod('cmdRecall', CmdRecall);
+        client.onDeviceMethod('GoToCustomer', CmdGoToCustomer);
+        client.onDeviceMethod('Recall', CmdRecall);
 
         // Get device twin from Azure IoT Central.
         client.getTwin((errorMessage, deviceTwin) => {
 
             // Failed to retrieve device twin.
             if (errorMessage) {
-                console.log(`Error getting device twin: ${errorMessage.toString()}`);
+                redMessage(`Error getting device twin: ${errorMessage.toString()}`);
             }
             else {
                 // Notify the user of the successful link.
-                console.log('Device Twin successfully retrieved from Azure IoT Central');
+                greenMessage('Device Twin successfully retrieved from Azure IoT Central');
 
                 // Send device properties once on device startup.
                 sendDeviceProperties(deviceTwin);
