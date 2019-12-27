@@ -2,6 +2,7 @@
 page_type: sample
 languages:
 - javascript
+- csharp
 products:
 - azure-iot-central
 - azure-maps
