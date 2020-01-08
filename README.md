@@ -28,6 +28,7 @@ The sample here provides the source code that is created in the Your First IoT C
 |-------------------|--------------------------------------------|
 | `app.js`          | Node.js source code.                       |
 | `Program.cs`      | C# source code.                       |
+| `Refrigerated Truck Capability Model.JSON`      | Capability model, for the "Set up rules and actions" Learn module |
 | `.gitignore`      | Define what to ignore at commit time.      |
 | `CHANGELOG.md`    | List of changes to the sample.             |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
