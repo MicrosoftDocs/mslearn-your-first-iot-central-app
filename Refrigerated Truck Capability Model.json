@@ -1,0 +1,292 @@
+{
+  "@id": "urn:refrigeratedTruckRulesAndActions:RefrigeratedTruckRA_68o:1",
+  "@type": "CapabilityModel",
+  "implements": [
+    {
+      "@id": "urn:refrigeratedTruckRulesAndActions:RefrigeratedTruckRA_68o:feh514ua:1",
+      "@type": "InterfaceInstance",
+      "name": "Interface_1pq",
+      "schema": {
+        "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:1",
+        "@type": "Interface",
+        "displayName": {
+          "en": "Interface"
+        },
+        "contents": [
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsTemperature:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Temperature"
+            ],
+            "displayName": {
+              "en": "Contents Temperature"
+            },
+            "name": "ContentsTemperature",
+            "schema": "double"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsState:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/State"
+            ],
+            "displayName": {
+              "en": "Contents state"
+            },
+            "name": "ContentsState",
+            "schema": {
+              "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsState:bx_tjmau:1",
+              "@type": "Enum",
+              "valueSchema": "string",
+              "enumValues": [
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsState:bx_tjmau:empty:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "empty"
+                  },
+                  "enumValue": "empty",
+                  "name": "empty"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsState:bx_tjmau:full:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "full"
+                  },
+                  "enumValue": "full",
+                  "name": "full"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:ContentsState:bx_tjmau:melting:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "melting"
+                  },
+                  "enumValue": "melting",
+                  "name": "melting"
+                }
+              ]
+            }
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/State"
+            ],
+            "displayName": {
+              "en": "Truck state"
+            },
+            "name": "TruckState",
+            "schema": {
+              "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:1",
+              "@type": "Enum",
+              "valueSchema": "string",
+              "enumValues": [
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:enroute:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "enroute"
+                  },
+                  "enumValue": "enroute",
+                  "name": "enroute"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:delivering:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "delivering"
+                  },
+                  "enumValue": "delivering",
+                  "name": "delivering"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:returning:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "returning"
+                  },
+                  "enumValue": "returning",
+                  "name": "returning"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:loading:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "loading"
+                  },
+                  "enumValue": "loading",
+                  "name": "loading"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:ready:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "ready"
+                  },
+                  "enumValue": "ready",
+                  "name": "ready"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckState:z9nxqbp88:dumping:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "dumping"
+                  },
+                  "enumValue": "dumping",
+                  "name": "dumping"
+                }
+              ]
+            }
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CoolingSystemState:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/State"
+            ],
+            "displayName": {
+              "en": "Cooling system state"
+            },
+            "name": "CoolingSystemState",
+            "schema": {
+              "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CoolingSystemState:_bao2pr6y:1",
+              "@type": "Enum",
+              "valueSchema": "string",
+              "enumValues": [
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CoolingSystemState:_bao2pr6y:on:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "on"
+                  },
+                  "enumValue": "on",
+                  "name": "on"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CoolingSystemState:_bao2pr6y:off:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "off"
+                  },
+                  "enumValue": "off",
+                  "name": "off"
+                },
+                {
+                  "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CoolingSystemState:_bao2pr6y:failed:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "failed"
+                  },
+                  "enumValue": "failed",
+                  "name": "failed"
+                }
+              ]
+            }
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CommandConflict:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Command conflict"
+            },
+            "name": "CommandConflict",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:CustomerChange:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Customer change"
+            },
+            "name": "CustomerChange",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:Location:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Location"
+            ],
+            "displayName": {
+              "en": "Location"
+            },
+            "name": "Location",
+            "schema": "geopoint"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:TruckID:1",
+            "@type": "Property",
+            "displayName": {
+              "en": "Truck ID"
+            },
+            "name": "TruckID",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:SetOptimalTemperature:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "request": {
+              "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:SetOptimalTemperature:OptimalTemperature:1",
+              "@type": "SchemaField",
+              "displayName": {
+                "en": "Optimal temperature"
+              },
+              "name": "OptimalTemperature",
+              "schema": "double",
+              "unit": "Units/Temperature/celsius"
+            },
+            "displayName": {
+              "en": "Set optimal temperature"
+            },
+            "name": "SetOptimalTemperature"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:GoToCustomer:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "request": {
+              "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:GoToCustomer:CustomerID:1",
+              "@type": "SchemaField",
+              "displayName": {
+                "en": "Customer ID"
+              },
+              "name": "CustomerID",
+              "schema": "integer"
+            },
+            "displayName": {
+              "en": "Go to customer"
+            },
+            "name": "GoToCustomer"
+          },
+          {
+            "@id": "urn:refrigeratedtrucks:Refrigerated_Truck_226:Recall:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "displayName": {
+              "en": "Recall"
+            },
+            "name": "Recall"
+          }
+        ]
+      }
+    }
+  ],
+  "displayName": {
+    "en": "Refrigerated Truck RA"
+  },
+  "contents": [],
+  "@context": [
+    "http://azureiot.com/v1/contexts/IoTModel.json"
+  ]
+}
