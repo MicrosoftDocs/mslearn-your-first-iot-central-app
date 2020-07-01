@@ -177,7 +177,6 @@ namespace refrigerated_truck
             var req = new RouteRequestDirections
             {
                 Query = FormattableString.Invariant($"{currentLat},{currentLon}:{destinationLat},{destinationLon}")
-                //Query = $"{currentLat},{currentLon}:{destinationLat},{destinationLon}"
             };
             var directions = azureMapsServices.GetRouteDirections(req).Result;
 
