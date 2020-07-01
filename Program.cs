@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Text.Json;
 using System.Text;
 using System.Threading;
@@ -175,7 +176,8 @@ namespace refrigerated_truck
 
             var req = new RouteRequestDirections
             {
-                Query = $"{currentLat},{currentLon}:{destinationLat},{destinationLon}"
+                Query = FormattableString.Invariant($"{currentLat},{currentLon}:{destinationLat},{destinationLon}")
+                //Query = $"{currentLat},{currentLon}:{destinationLat},{destinationLon}"
             };
             var directions = azureMapsServices.GetRouteDirections(req).Result;
 
@@ -661,6 +663,7 @@ namespace refrigerated_truck
         }
     }
 }
+
 
 
 
