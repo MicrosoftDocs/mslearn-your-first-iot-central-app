@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Text;
 using System.Threading;
@@ -68,43 +67,44 @@ namespace refrigerated_truck
         static FanEnum fan = FanEnum.on;                // Cooling fan state.
         static ContentsEnum contents = ContentsEnum.full;    // Truck contents state.
         static StateEnum state = StateEnum.ready;       // Truck is full and ready to go!
-        static double optimalTemperature = -5;         // Setting - can be changed by the operator from IoT Central.
+        static double optimalTemperature = -5;          // Setting - can be changed by the operator from IoT Central.
+        static double outsideTemperature = 12;          // Outside ambient temperature
 
         const string noEvent = "none";
         static string eventText = noEvent;              // Event text sent to IoT Central.
 
         static double[,] customer = new double[,]
-        {                    
-            // Lat/lon position of customers.
-            // Gasworks Park
-            {47.645892, -122.336954},
-
-            // Golden Gardens Park
-            {47.688741, -122.402965},
-
-            // Seward Park
-            {47.551093, -122.249266},
-
-            // Lake Sammamish Park
-            {47.555698, -122.065996},
-
-            // Marymoor Park
-            {47.663747, -122.120879},
-
-            // Meadowdale Beach Park
-            {47.857295, -122.316355},
-
-            // Lincoln Park
-            {47.530250, -122.393055},
-
-            // Gene Coulon Park
-            {47.503266, -122.200194},
-
-            // Luther Bank Park
-            {47.591094, -122.226833},
-
-            // Pioneer Park
-            {47.544120, -122.221673 }
+        {
+                // Lat/lon position of customers.
+                // Gasworks Park
+                {47.645892, -122.336954},
+    
+                // Golden Gardens Park
+                {47.688741, -122.402965},
+    
+                // Seward Park
+                {47.551093, -122.249266},
+    
+                // Lake Sammamish Park
+                {47.555698, -122.065996},
+    
+                // Marymoor Park
+                {47.663747, -122.120879},
+    
+                // Meadowdale Beach Park
+                {47.857295, -122.316355},
+    
+                // Lincoln Park
+                {47.530250, -122.393055},
+    
+                // Gene Coulon Park
+                {47.503266, -122.200194},
+    
+                // Luther Bank Park
+                {47.591094, -122.226833},
+    
+                // Pioneer Park
+                {47.544120, -122.221673 }
         };
 
         static double[,] path;                          // Lat/lon steps for the route.
@@ -123,9 +123,8 @@ namespace refrigerated_truck
         static string ScopeID = "<your Scope ID>";
         static string DeviceID = "<your Device ID>";
         static string PrimaryKey = "<your device Primary Key>";
-        static string AzureMapsKey = "<your Azure Maps Subscription Key>";
+        static string AzureMapsKey = "<your Azure Maps key>";
 
-        // Truck simulation functions.
         static double Degrees2Radians(double deg)
         {
             return deg * Math.PI / 180;
@@ -243,20 +242,13 @@ namespace refrigerated_truck
             }
         }
 
-        // This task is triggered when a Go To Customer command is sent from IoT Central.
         static Task<MethodResponse> CmdGoToCustomer(MethodRequest methodRequest, object userContext)
         {
             try
             {
-                // Pick up variables from the request payload, with the field name specified in IoT Central.
+                // Pick up variables from the request payload, with the name specified in IoT Central.
                 var payloadString = Encoding.UTF8.GetString(methodRequest.Data);
-                //var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(payloadString);
-
-                // Parse the input string for name/value pair.
-                //string key = dict.Keys.ElementAt(0);
-                //int customerNumber = Int32.Parse(dict.Values.ElementAt(0));
                 int customerNumber = Int32.Parse(payloadString);
-
 
                 // Check for a valid key and customer ID.
                 if (customerNumber >= 0 && customerNumber < customer.Length)
@@ -427,6 +419,9 @@ namespace refrigerated_truck
                 }
             }
 
+            // Ensure temperatue contents does not exceed ambient temperature.
+            tempContents = Math.Min(tempContents, outsideTemperature);
+
             timeOnCurrentTask += interval;
 
             switch (state)
@@ -509,10 +504,11 @@ namespace refrigerated_truck
                     break;
             }
         }
+
         static void colorMessage(string text, ConsoleColor clr)
         {
             Console.ForegroundColor = clr;
-            Console.WriteLine(text);
+            Console.WriteLine(text + "\n");
             Console.ResetColor();
         }
         static void greenMessage(string text)
@@ -547,7 +543,7 @@ namespace refrigerated_truck
                 // Clear the events, as the message has been sent.
                 eventText = noEvent;
 
-                Console.WriteLine($"\nTelemetry data: {telemetryMessageString}");
+                Console.WriteLine($"Telemetry data: {telemetryMessageString}");
 
                 // Bail if requested.
                 token.ThrowIfCancellationRequested();
@@ -560,35 +556,24 @@ namespace refrigerated_truck
             }
         }
 
-        // Properties and writable properties.
         static async Task SendDevicePropertiesAsync()
         {
             reportedProperties["TruckID"] = truckIdentification;
             await s_deviceClient.UpdateReportedPropertiesAsync(reportedProperties);
-            greenMessage($"Sent device properties: {JsonSerializer.Serialize(reportedProperties)}");
+            greenMessage($"Sent device properties: {reportedProperties["TruckID"]}");
         }
+
         static async Task HandleSettingChanged(TwinCollection desiredProperties, object userContext)
         {
             string setting = "OptimalTemperature";
             if (desiredProperties.Contains(setting))
             {
-                BuildAcknowledgement(desiredProperties, setting);
-                optimalTemperature = (int)desiredProperties[setting]["value"];
+                optimalTemperature = reportedProperties[setting] = desiredProperties[setting];
                 greenMessage($"Optimal temperature updated: {optimalTemperature}");
             }
             await s_deviceClient.UpdateReportedPropertiesAsync(reportedProperties);
         }
 
-        static void BuildAcknowledgement(TwinCollection desiredProperties, string setting)
-        {
-            reportedProperties[setting] = new
-            {
-                value = desiredProperties[setting]["value"],
-                status = "completed",
-                desiredVersion = desiredProperties["$version"],
-                message = "Processed"
-            };
-        }
         static void Main(string[] args)
         {
 
@@ -640,7 +625,6 @@ namespace refrigerated_truck
             }
         }
 
-
         public static async Task<DeviceRegistrationResult> RegisterDeviceAsync(SecurityProviderSymmetricKey security)
         {
             Console.WriteLine("Register device...");
@@ -662,7 +646,4 @@ namespace refrigerated_truck
         }
     }
 }
-
-
-
 
